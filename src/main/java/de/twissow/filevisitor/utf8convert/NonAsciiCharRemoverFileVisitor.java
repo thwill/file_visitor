@@ -38,7 +38,7 @@ public class NonAsciiCharRemoverFileVisitor implements FileVisitor<Path> {
     }
 
     public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-        log.info("visitFileFailed " + dir.getFileName());
+        log.info("postVisitDirectory " + dir.getFileName());
         return FileVisitResult.CONTINUE;
     }
 
