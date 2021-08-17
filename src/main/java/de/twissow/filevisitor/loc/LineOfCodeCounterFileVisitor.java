@@ -17,31 +17,38 @@ import java.util.List;
 @Getter
 public class LineOfCodeCounterFileVisitor implements FileVisitor<Path> {
 
+    private int countFacelets;
     private int countClasses;
     private int lineOfCodes;
-
-    @Override public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-        return null;
-    }
 
     @Override public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         log.info("visitFile " + file.getFileName());
         String extension = FilenameUtils.getExtension(file.toFile().getName());
         if (extension.equals("java")) {
             countClasses++;
-            List<String> fileContent = Files.readAllLines(file);
+            List<String> fileContent = Files.readAllLines(file, Charset.forName("Cp1252"));
             lineOfCodes += fileContent.size();
+            return FileVisitResult.CONTINUE;
+        } else if (extension.equals("xhtml")) {
+            countFacelets++;
             return FileVisitResult.CONTINUE;
         } else {
             return FileVisitResult.CONTINUE;
         }
     }
 
-    @Override public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-        return null;
+    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+        log.info("preVisitDirectory " + dir.getFileName());
+        return FileVisitResult.CONTINUE;
     }
 
-    @Override public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-        return null;
+    public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        log.info("visitFileFailed" + file.getFileName());
+        return FileVisitResult.CONTINUE;
+    }
+
+    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        log.info("postVisitDirectory " + dir.getFileName());
+        return FileVisitResult.CONTINUE;
     }
 }
